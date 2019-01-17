@@ -1,5 +1,5 @@
 <template>
-    <my-page title="文本比较、合并">
+    <my-page title="文本比较、合并" :page="page">
         <div>
             <div id="mergely-resizer">
                 <div id="diff">
@@ -40,6 +40,15 @@
                 </div>
             </ui-col>
         </ui-row>
+        <ui-drawer right :open="open" @close="toggle()">
+            <ui-appbar title="Muse UI"/>
+            <ui-list>
+            <ui-list-item title="Menu Item 1"/>
+            <ui-list-item title="Menu Item 2"/>
+            <ui-list-item title="Menu Item 3"/>
+            <ui-list-item @click.native="open = false" title="Close"/>
+            </ui-list>
+        </ui-drawer>
     </my-page>
 </template>
 
@@ -48,6 +57,24 @@
     export default {
         data () {
             return {
+                open: false,
+                page: {
+                    menu: [
+                        {
+                            type: 'icon',
+                            icon: 'apps',
+                            href: 'https://app.yunser.com/',
+                            target: '_blank',
+                            title: '应用'
+                        }
+                        // {
+                        //     type: 'icon',
+                        //     icon: 'settings',
+                        //     click: this.toggle,
+                        //     title: '设置'
+                        // }
+                    ]
+                }
             }
         },
         mounted() {
@@ -55,7 +82,12 @@
             var r_files;
 
             $('#diff').mergely({
-                cmsettings: { readOnly: false },
+                cmsettings: {
+                    readOnly: false
+                },
+                editor_height: '500px',
+                editor_width: ((window.innerWidth - 96) / 2) + 'px',
+                sidebar: false,
                 lhs: function(setValue) {
                     setValue('这是第一段文本\n这是第2段文本\n这是第三段文本\n这是第四段文本');
                 },
@@ -63,10 +95,6 @@
                     setValue('这是第一段文本\n这是第二段文本\n这是第三段文本\n这是第4段文本');
                 }
             });
-            
-            
-
-            
 
             function leftFileSelect(files) {
                 l_files=files;
@@ -176,8 +204,23 @@
                 var base_src="/js/CodeMirror-2.25/mode/";
                 $("#render_js").attr("src",base_src+type);
             }
+
+            window.addEventListener('resize', this._onResize = () => {
+                console.log('resize')
+                $('#diff').mergely({
+                    editor_height: '500px',
+                    editor_width: ((window.innerWidth - 96) / 2) + 'px'
+                })
+                $('#diff').mergely('resize');
+            })
+        },
+        destroyed() {
+            window.removeEventListener('resize', this._onResize)
         },
         methods: {
+            toggle () {
+                this.open = !this.open
+            },
             fileChange(e, left) {
                 function setRender(type){
                     var base_src="/js/CodeMirror-2.25/mode/";

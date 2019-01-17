@@ -11,6 +11,10 @@ Vue.use(Router)
 let routes = [
     {
         path: '/',
+        redirect: '/editor'
+    },
+    {
+        path: '/editor',
         component: Home
     },
     {

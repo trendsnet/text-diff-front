@@ -1,5 +1,5 @@
 <template>
-    <my-page title="关于">
+    <my-page title="关于" backable>
         <ui-article class="article">
             <h2>工具介绍</h2>
             <p>经常遇到这样的问题，一大段文字、配置文件或代码，修改过其中一部分，却忘了哪里改动过。这个工具可以帮到我们。</p>
